@@ -1,14 +1,8 @@
+const path = require("path");
+
 module.exports = {
+  outputDir: path.resolve(__dirname, "./templates"),
   "transpileDependencies": [
     "vuetify"
   ],
-  devServer: {
-    proxy: {
-      '^/ws': {
-        target: 'http://localhost:5000',
-        ws: true,
-        changeOrigin: true
-      },
-    }
-  }
 }

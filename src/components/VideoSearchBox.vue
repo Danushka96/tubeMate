@@ -71,7 +71,7 @@ export default {
   methods: {
     getVideoInfo(){
       this.loading = true;
-      axios.get("/api/info?video=" + this.videoUrl)
+      axios.get("/info?video=" + this.videoUrl)
       .then(response => {
         if (response.data.error){
           this.error = true;

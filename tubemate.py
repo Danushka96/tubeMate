@@ -7,10 +7,10 @@ import re
 
 app = flask.Flask(__name__, static_url_path='')
 CORS(app, supports_credentials=True)
-app.config["DEBUG"] = True
+app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'secret!'
 app.config['CORS_HEADERS'] = 'Content-Type'
-youtubeUrlRegx = re.compile('^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$')
+urlRegx = re.compile('^(http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*$')
 
 class MyLogger(object):
     def debug(self, msg):
@@ -59,11 +59,14 @@ def index():
 def info():
     response = {
         "error": "400",
-        "message": "Not a valid Youtube URL"
+        "message": "Not a valid URL"
     }
     if (isValidUrl(request.args.get('video'))):
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                response = ydl.extract_info(request.args.get('video'), False)
+        try:
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    response = ydl.extract_info(request.args.get('video'), False)
+        except:
+            print("Not a Valid URL")
     return jsonify(response)
 
 @app.route('/download', methods=['GET'])
@@ -74,7 +77,7 @@ def download():
     return jsonify(response)
 
 def isValidUrl(url):
-    return re.match(youtubeUrlRegx, url) is not None
+    return re.match(urlRegx, url) is not None
 
 # app.run()
 

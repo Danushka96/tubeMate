@@ -20,29 +20,31 @@
         >
           <p>Title : {{ video.title }}</p>
           <p>Time : {{ Math.round(video.duration / 60) }} min</p>
-<!--          <p v-if="video.abr">Description :-->
-<!--            {{ (video.description.length > 60) ? video.description.substring(0, 60) : video.description }}</p>-->
+          <p v-if="video.abr">Description :
+            {{ (video.description.length > 60) ? video.description.substring(0, 60) : video.description }}</p>
           <v-row>
-<!--            <v-col-->
-<!--                class="d-flex"-->
-<!--                cols="12"-->
-<!--                sm="6"-->
-<!--            >-->
-<!--              <v-select-->
-<!--                  v-model="quality"-->
-<!--                  :items="getVideFormats()"-->
-<!--                  item-text="format"-->
-<!--                  item-value="format_id"-->
-<!--                  label="Quality"-->
-<!--                  outlined-->
-<!--              ></v-select>-->
-<!--            </v-col>-->
+            <v-col
+                class="d-flex"
+                cols="12"
+                sm="6"
+            >
+              <v-select
+                  v-model="quality"
+                  :items="getVideFormats()"
+                  item-text="format"
+                  item-value="format_id"
+                  label="Quality"
+                  outlined
+              ></v-select>
+            </v-col>
             <v-col
                 cols="6"
                 sm="3"
             >
-              <a :href=video.url style="text-decoration:none;" target="_blank">
+              <a :href=getVideData() style="text-decoration:none;" target="_blank">
                 <v-btn
+                    :disabled="quality === null"
+                    :loading="loading3"
                     class="ma-2 white--text"
                     color="green"
                 >
@@ -67,9 +69,21 @@ export default {
   name: "VideoData",
   props: ['video'],
   data: () => ({
-  //
+    loading3: false,
+    items: [],
+    quality: null
   }),
   methods: {
+    getVideData() {
+      return this.video.formats.filter(format => format.format_id === this.quality).map(format => format.url);
+    },
+    getVideFormats(){
+      if (this.video.abr) return this.video.formats.filter(format => format.abr)
+      else return this.video.formats
+    },
+    getVideoSize(){
+
+    }
   }
 }
 </script>

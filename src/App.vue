@@ -40,7 +40,10 @@
     <v-main>
       <v-container>
         <video-search-box/>
-        <div v-if="getVideos() && getVideos().length !== 0">
+        <div v-if="getVideos() && getVideos().length !== 0 && getVideos()[0].abr">
+          <youtube-video-data v-for="video in getVideos()" :key="video.display_id" :video=video class="my-4"></youtube-video-data>
+        </div>
+        <div v-if="getVideos() && getVideos().length !== 0 && !getVideos()[0].abr">
           <video-data v-for="video in getVideos()" :key="video.display_id" :video=video class="my-4"></video-data>
         </div>
       </v-container>
@@ -51,12 +54,14 @@
 <script>
 import VideoSearchBox from "@/components/VideoSearchBox";
 import VideoData from "@/components/VideoData";
+import YoutubeVideoData from "@/components/YoutubeVideoData";
 
 export default {
   name: 'App',
   components: {
     VideoData,
     VideoSearchBox,
+    YoutubeVideoData
   },
   data: () => ({}),
   methods: {

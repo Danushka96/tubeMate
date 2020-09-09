@@ -7,7 +7,7 @@
       >
         <v-text-field
             hint="https://www.youtube.com/watch?v=SzhLFazz7xU"
-            label="Youtube Link"
+            label="Video Link"
             outlined
             persistent-hint
             v-model=videoUrl
@@ -73,6 +73,7 @@ export default {
       this.loading = true;
       axios.get("/info?video=" + this.videoUrl)
       .then(response => {
+        // console.log(response)
         if (response.data.error){
           this.error = true;
           this.loading = false;

@@ -18,12 +18,25 @@ jobs:
             ${{ runner.os }}-node-
       - name: install npm packages
         run: npm install
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+            
       - name: Build Docker image
         uses: docker/build-push-action@v1
         with:
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
-          cache_froms: danushka96/tubemate/tubemate:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
           registry: docker.pkg.github.com
           repository: danushka96/tubemate/tubemate
           tag_with_ref: true

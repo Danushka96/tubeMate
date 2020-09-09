@@ -45,6 +45,6 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
           push: true
-          tags: danushka96/tubemate:latest
+#           tags: danushka96/tubemate:latest
           secrets: |
             GIT_AUTH_TOKEN=${{ github.token }}
